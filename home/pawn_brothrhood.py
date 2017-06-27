@@ -16,20 +16,17 @@ Precondition:
 """
 
 
-def protecting_cells(cell) -> set:
+def protecting_cells(cell):
     row = str(int(cell[1]) - 1)
     col = ord(cell[0])
-
     return {chr(col - 1) + row,
             chr(col + 1) + row}
 
 
 def safe_pawns(pawns):
     counter = 0
-
     for p in pawns:
-        cells = protecting_cells(p)
-        if cells & pawns:
+        if protecting_cells(p) & pawns:
             counter += 1
     return counter
 
