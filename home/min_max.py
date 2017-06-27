@@ -22,22 +22,27 @@ raise exceptions.
 """
 
 
-def min(*args, **kwargs):
+def gt(x, y): return x > y
+
+
+def ls(x, y): return x < y
+
+
+def calculate(operator, *args, **kwargs):
     key = kwargs.get("key", lambda x: x)
-    smallest, *rest = args if len(args) > 1 else args[0]
+    value, *rest = args if len(args) > 1 else args[0]
     for i in rest:
-        if key(i) < key(smallest):
-            smallest = i
-    return smallest
+        if operator(key(i), key(value)):
+            value = i
+    return value
+
+
+def min(*args, **kwargs):
+    return calculate(ls, *args, **kwargs)
 
 
 def max(*args, **kwargs):
-    key = kwargs.get("key", lambda x: x)
-    biggest, *rest = args if len(args) > 1 else args[0]
-    for i in rest:
-        if key(i) > key(biggest):
-            biggest = i
-    return biggest
+    return calculate(gt, *args, **kwargs)
 
 
 if __name__ == '__main__':
