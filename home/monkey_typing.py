@@ -29,8 +29,13 @@ all(3 ≤ len(w) and w.islower() and w.isalpha for w in words)
 
 
 def count_words(text, words):
+    counter = 0
+    text = text.lower()
+    for w in words:
+        if w.lower() in text:
+            counter += 1
 
-    return 0
+    return counter
 
 
 if __name__ == '__main__':
