@@ -1,10 +1,9 @@
-import sys
 import os
 
 import sendgrid
 from sendgrid.helpers.mail import Email,  Mail, Content
 
-API_KEY = sys.argv[1]
+API_KEY = os.environ.get('SENDGRID_API_KEY')
 SUBJECT = 'Welcome'
 BODY = 'Hi {}'
 
