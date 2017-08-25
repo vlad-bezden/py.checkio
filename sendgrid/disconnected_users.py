@@ -55,7 +55,6 @@ def find_connected_nodes(graph, source):
         to_process = graph[source]
         while to_process:
             node = to_process.pop()
-            # for node in (node for node in nodes if node not in processed):
             if node not in processed:
                 processed.append(node)
                 if node in graph:
@@ -120,3 +119,15 @@ if __name__ == '__main__':
         'F': 10
     },
         'C', ['A']) == 50, 'Third'
+
+    assert disconnected_users([
+        ['A', 'B'],
+        ['B', 'C'],
+        ['C', 'D']
+    ], {
+        'A': 10,
+        'C': 30,
+        'B': 20,
+        'D': 40
+    },
+        'A', ['A']) == 100, 'Forth'
