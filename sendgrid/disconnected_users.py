@@ -70,8 +70,10 @@ def find_disconnected_nodes(net, connected_with_source):
 
 
 def disconnected_users(net, users, source, crushes):
-    graph = build_graph(net, source, crushes)
-    connected_with_source = find_connected_nodes(graph, source)
+    connected_with_source = ()
+    if source not in crushes:
+        graph = build_graph(net, source, crushes)
+        connected_with_source = find_connected_nodes(graph, source)
     disconnected_nodes = find_disconnected_nodes(net, connected_with_source)
     return sum(users[node] for node in disconnected_nodes)
 
