@@ -28,20 +28,20 @@ Output: Int. The amount of sub-networks after crushing nodes.
 
 
 def subnetworks(net, crushes):
-    result = []
+    one_cities = []
+    mult_cities = []
+
     for x in net:
         for y in crushes:
             if y in x:
                 x.remove(y)
-        if x:
-            result.append(x)
+        if len(x) == 1:
+            one_cities.append(x[0])
+        elif len(x) > 1:
+            mult_cities.append(x)
 
-    one_cities = [x[0] for x in result if len(x) == 1]
-    mult_cities = [x for x in result if len(x) > 1]
-    nets = len(mult_cities) + \
+    return len(mult_cities) + \
         len([x for x in one_cities if x not in sum(mult_cities, [])])
-
-    return nets
 
 
 if __name__ == '__main__':
