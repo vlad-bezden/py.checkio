@@ -19,14 +19,6 @@ Output: Int. The amount of sub-networks after crushing nodes.
 '''
 
 
-# def remove_crushed(net, crushed):
-#     '''Removes crushed nodes from networks'''
-
-#     result = [x for x in net if x not in crushed]
-
-#     return result
-
-
 def subnetworks(net, crushes):
     one_cities = []
     mult_cities = []
