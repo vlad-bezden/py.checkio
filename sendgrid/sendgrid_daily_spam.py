@@ -19,7 +19,7 @@ import sendgrid
 sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
 
 
-def how_spammed(str_date):
+def how_spammed(date):
     params = {'aggregated_by': 'day',
               'start_date': date, 'end_date': date, 'offset': 1}
     response = sg.client.stats.get(query_params=params)
