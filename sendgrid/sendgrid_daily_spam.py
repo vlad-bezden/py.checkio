@@ -13,25 +13,32 @@ Output: Int. The amount of spam reports
 
 import os
 import json
+from datetime import datetime
+from datetime import timedelta
 
 import sendgrid
 
 sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
 
 
-def how_spammed(date):
-    params = {'aggregated_by': 'day',
-              'start_date': date, 'end_date': date, 'offset': 1}
-    response = sg.client.stats.get(query_params=params)
+def how_spammed(str_date):
+    start_date = datetime.strptime(str_date, '%Y-%m-%d')
+    end_date = start_date + timedelta(days=1)
+
+    response = sg.client.suppression.spam_reports.get(query_params={
+        'end_time': int(end_date.timestamp()),
+        'start_time': int(start_date.timestamp())
+    })
+
     data = json.loads(response.body)
 
-    return data[0]['stats'][0]['metrics']['spam_reports']
+    return len(data)
 
 
 if __name__ == '__main__':
     # These asserts' using only for self-checking and not necessary
     # for auto-testing
-    date = '2018-01-07'
+    date = '2014-5-5'
     spams_count = how_spammed(date)
 
     print(f'You had {spams_count} spam reports in {date}')
