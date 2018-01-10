@@ -22,8 +22,8 @@ sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
 
 
 def how_spammed(str_date):
-    start_date = datetime.strptime(str_date, '%Y-%m-%d')
-    end_date = start_date + timedelta(days=1)
+    end_date = datetime.strptime(str_date, '%Y-%m-%d')
+    start_date = end_date + timedelta(days=1)
 
     response = sg.client.suppression.spam_reports.get(query_params={
         'end_time': int(end_date.timestamp()),
