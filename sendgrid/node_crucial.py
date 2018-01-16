@@ -25,9 +25,94 @@ users).
 Output: List of the most crusial nodes.
 '''
 
+from collections import defaultdict
+
+
+ROOT_NODE = 'A'
+
+
+def graph(net):
+    '''Creates graph from network of nodes'''
+
+    graph = defaultdict(set)
+
+    for node in net:
+        graph[node[0]].add(node[1])
+
+    return graph
+
+
+def network_candidates(network, node):
+    '''
+    Finds network candidates
+
+    Assumption: First node in the graph is ROOT_NODE
+    '''
+
+    candidates = []
+
+    if node != ROOT_NODE:
+        candidates.append(ROOT_NODE)
+
+    if node in network:
+        candidates += network[node]
+
+    return candidates
+
+
+def happiness_network(graph, node):
+    '''
+    Creates network for one of the nodes to be used
+
+    This one is generated if node is a hub (key in the dict)
+    '''
+
+    networks_to_process = network_candidates(graph, node)
+    networks = []
+    candidates = []
+
+    for city in networks_to_process:
+        network = [city]
+        candidates += graph[city]
+        while candidates:
+            vertex = candidates.pop()
+            if vertex == node:
+                continue
+            network.append(vertex)
+            candidates += graph[vertex]
+
+        networks.append(network)
+
+    return networks
+
+
+def calc_happiness(network, users, city):
+    '''
+    Goes through each node and calculates happiness for each one
+    '''
+
+    price = users[city]
+    networks = happiness_network(network, city)
+
+    for net in networks:
+        price += (sum([users[n] for n in net])) ** 2
+
+    return price
+
 
 def most_crucial(net, users):
-    return ['B']
+
+    cities = set(sum(net, []))
+
+    # get unique nodes
+    network = graph(net)
+
+    results = []
+
+    for city in cities:
+        results.append((calc_happiness(network, users, city), city))
+
+    return [city[1] for city in results if city[0] == min(results)[0]]
 
 
 if __name__ == '__main__':
