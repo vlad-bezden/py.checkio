@@ -49,13 +49,13 @@ def network_candidates(network, node):
     Assumption: First node in the graph is ROOT_NODE
     '''
 
-    candidates = []
+    candidates = set()
 
     if node != ROOT_NODE:
-        candidates.append(ROOT_NODE)
+        candidates.update(ROOT_NODE)
 
     if node in network:
-        candidates += network[node]
+        candidates.update(network[node])
 
     return candidates
 
@@ -160,5 +160,15 @@ if __name__ == '__main__':
         'C': 10,
         'D': 20
     }) == ['B'], 'Forth'
+
+    assert most_crucial([
+        ['A', 'B'],
+        ['B', 'C'],
+        ['C', 'A']
+    ], {
+        'A': 10,
+        'C': 10,
+        'B': 5
+    }) == ['A', 'C'], 'Fifth'
 
     print('Nobody expected that, but you did it! It is time to share it!')
