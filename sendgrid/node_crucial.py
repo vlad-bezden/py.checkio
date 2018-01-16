@@ -76,6 +76,8 @@ def happiness_network(graph, node):
         candidates += graph[city]
         while candidates:
             vertex = candidates.pop()
+            # exclude currently processing node/city
+            # because it can't be part of the network
             if vertex == node:
                 continue
             network.append(vertex)
@@ -101,17 +103,18 @@ def calc_happiness(network, users, city):
 
 
 def most_crucial(net, users):
+    '''Driver of the program'''
 
     cities = set(sum(net, []))
 
     # get unique nodes
     network = graph(net)
 
-    results = []
+    # get happiness for each city/node
+    results = [(calc_happiness(network, users, city), city) for city in cities]
 
-    for city in cities:
-        results.append((calc_happiness(network, users, city), city))
-
+    # since there might be more than one city with the same number of happiness
+    # we need to return all of them
     return [city[1] for city in results if city[0] == min(results)[0]]
 
 
