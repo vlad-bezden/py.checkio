@@ -54,8 +54,7 @@ def network_candidates(network, node):
     if node != ROOT_NODE:
         candidates.update(ROOT_NODE)
 
-    if node in network:
-        candidates.update(network[node])
+    candidates.update(network[node])
 
     return candidates
 
@@ -115,12 +114,13 @@ def most_crucial(net, users):
 
     # since there might be more than one city with the same number of happiness
     # we need to return all of them
-    return [city[1] for city in results if city[0] == min(results)[0]]
+    return sorted([city[1] for city in results if city[0] == min(results)[0]])
 
 
 if __name__ == '__main__':
     # These "asserts" using only for self-checking and not necessary
     # for auto-testing
+
     assert most_crucial([
         ['A', 'B'],
         ['B', 'C']
