@@ -92,7 +92,7 @@ def check_network_connections(all_networks):
 
     for net in all_networks:
         for sub in final_networks:
-            if net.intersection(sub):
+            if net & sub:
                 sub.update(net)
                 break
         else:
