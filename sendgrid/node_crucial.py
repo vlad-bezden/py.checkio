@@ -28,9 +28,6 @@ Output: List of the most crusial nodes.
 from collections import defaultdict
 
 
-ROOT_NODE = 'A'
-
-
 def graph(net):
     '''Creates graph from network of nodes'''
 
@@ -42,49 +39,66 @@ def graph(net):
     return graph
 
 
-def network_candidates(network, node):
-    '''
-    Finds network candidates
+def remove_city(network, city):
+    '''Removes city and creates new netwrork(s)'''
 
-    Assumption: First node in the graph is ROOT_NODE
-    '''
+    graph = defaultdict(set)
 
-    candidates = set()
+    for k, v in network.items():
+        if city == k:
+            # if city is a key
+            next(graph[i] for i in v)
+        elif city in v:
+            # if city is connected to the key
+            graph[k] = (v - {city})
+        else:
+            # it is not a city, add key, value to the dict
+            graph[k] = v
 
-    if node != ROOT_NODE:
-        candidates.update(ROOT_NODE)
-
-    candidates.update(network[node])
-
-    return candidates
+    return graph
 
 
-def happiness_network(graph, node):
+def happiness_network(graph, city):
     '''
     Creates network for one of the nodes to be used
 
     This one is generated if node is a hub (key in the dict)
     '''
 
-    networks_to_process = network_candidates(graph, node)
-    networks = []
-    candidates = []
+    new_graph = remove_city(graph, city)
+    all_networks = []
+    processed = set()
 
-    for city in networks_to_process:
-        network = [city]
-        candidates += graph[city]
+    for k, v in new_graph.items():
+        if k in processed:
+            continue
+        network = set()
+        candidates = set(k)
         while candidates:
             vertex = candidates.pop()
-            # exclude currently processing node/city
-            # because it can't be part of the network
-            if vertex == node:
-                continue
-            network.append(vertex)
-            candidates += graph[vertex]
+            network.add(vertex)
+            candidates.update(new_graph.get(vertex, {}))
+            processed.add(vertex)
 
-        networks.append(network)
+        all_networks.append(network)
 
-    return networks
+    return check_network_connections(all_networks)
+
+
+def check_network_connections(all_networks):
+    '''Checks if networks have connections, and if so join them'''
+
+    final_networks = []
+
+    for net in all_networks:
+        for sub in final_networks:
+            if net.intersection(sub):
+                sub.update(net)
+                break
+        else:
+            final_networks.append(net)
+
+    return final_networks
 
 
 def calc_happiness(network, users, city):
@@ -118,7 +132,7 @@ def most_crucial(net, users):
 
 
 if __name__ == '__main__':
-    # These "asserts" using only for self-checking and not necessary
+    # These 'asserts' using only for self-checking and not necessary
     # for auto-testing
 
     assert most_crucial([
@@ -170,5 +184,20 @@ if __name__ == '__main__':
         'C': 10,
         'B': 5
     }) == ['A', 'C'], 'Fifth'
+
+    assert most_crucial([
+        ['A', 'B'],
+        ['B', 'C'],
+        ['B', 'D'],
+        ['C', 'E'],
+        ['D', 'E'],
+        ['E', 'F']
+    ], {
+        'A': 10,
+        'C': 15,
+        'B': 20,
+        'E': 10,
+        'D': 15,
+        'F': 20}) == ['B'], 'Sixth'
 
     print('Nobody expected that, but you did it! It is time to share it!')
