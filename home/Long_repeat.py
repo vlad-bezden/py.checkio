@@ -14,7 +14,16 @@ import re
 
 
 def long_repeat(line):
-    '''length the longest substring that consists of the same char'''
+    '''
+    length the longest substring that consists of the same char
+
+    Another solution is by using groupby function from itertools
+
+    from itertools import groupby
+
+    max([len(list(i)) for _, i in groupby(data)], default=0)
+    max([len(list(i[1])) for i in groupby(data)], default=0)
+    '''
 
     return max([len(i[0]) for i in re.findall(r'((.)\2*)', line)], default=0)
 
