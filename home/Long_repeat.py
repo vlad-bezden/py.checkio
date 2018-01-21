@@ -10,13 +10,13 @@ Input: String.
 Output: Int.
 '''
 
+import re
+
 
 def long_repeat(line):
-    '''
-        length the longest substring that consists of the same char
-    '''
+    '''length the longest substring that consists of the same char'''
 
-    return 0
+    return max([len(i[0]) for i in re.findall(r'((.)\2*)', line)], default=0)
 
 
 if __name__ == '__main__':
@@ -25,5 +25,6 @@ if __name__ == '__main__':
 
     assert long_repeat('sdsffffse') == 4, 'First'
     assert long_repeat('ddvvrwwwrggg') == 3, 'Second'
+    assert long_repeat('') == 0, 'Third'
 
     print('Run is good. How is Check?')
