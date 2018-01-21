@@ -17,16 +17,13 @@ Precondition:
 all(0 ≤ x < 10 ** 6 for x in data)
 '''
 
-import math
-
 
 def checkio(data):
     '''Finds median of the data array'''
 
     data.sort()
-    f, w = math.modf(len(data) / 2)
-    w = int(w)
-    return data[w] if f else (data[w - 1] + data[w]) / 2
+    mid = len(data) // 2
+    return data[mid] if len(data) % 2 else (data[mid - 1] + data[mid]) / 2
 
 
 if __name__ == '__main__':
