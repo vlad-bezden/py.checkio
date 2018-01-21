@@ -23,7 +23,7 @@ def checkio(data):
 
     data.sort()
     mid = len(data) // 2
-    return data[mid] if len(data) % 2 else (data[mid - 1] + data[mid]) / 2
+    return data[mid] if len(data) % 2 else sum(data[mid - 1: mid + 1]) / 2
 
 
 if __name__ == '__main__':
