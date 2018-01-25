@@ -18,9 +18,13 @@ Precondition: Dates between 1 january 1 and 31 december 9999. Dates are correct
 '''
 
 
+from datetime import datetime
+
+
 def days_diff(date1, date2):
     '''Find absolute diff in days between dates'''
-    return 0
+
+    return abs((datetime(*date1) - datetime(*date2)).days)
 
 
 if __name__ == '__main__':
