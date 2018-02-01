@@ -30,13 +30,12 @@ first_name and second_name in network.
 '''
 
 from collections import defaultdict
-from typing import Tuple, Dict, Set
 
 
-def create_graph(network: Tuple[str, ...]) -> Dict[str, Set[str]]:
+def create_graph(network):
     '''Creates graph of network as dict'''
 
-    graph: Dict[str, Set[str]] = defaultdict(set)
+    graph = defaultdict(set)
     for k, v in (x.split('-') for x in network):
         graph[k].add(v)
         graph[v].add(k)
@@ -44,7 +43,7 @@ def create_graph(network: Tuple[str, ...]) -> Dict[str, Set[str]]:
     return graph
 
 
-def create_forests(graph: Dict[str, Set[str]]) -> Set[str]:
+def create_forests(graph):
     '''Creates forests (subnetworks) if they are disconnected'''
 
     processed = set()
@@ -68,24 +67,12 @@ def create_forests(graph: Dict[str, Set[str]]) -> Set[str]:
     return forests
 
 
-def check_for_friends(forests, friends):
-    '''Check if names belong to the same network'''
-
-    for forest in forests:
-        if friends < forest:
-            return True
-
-    return False
-
-
-def check_connection(network: Tuple[str, ...],
-                     first: str, second: str) -> bool:
+def check_connection(network, first, second):
 
     graph = create_graph(network)
     forests = create_forests(graph)
-    result = check_for_friends(forests, {first, second})
 
-    return result
+    return any({first, second} < forest for forest in forests)
 
 
 if __name__ == '__main__':
