@@ -39,6 +39,7 @@ def create_graph(network: Tuple[str, ...]) -> Dict[str, Set[str]]:
     graph: Dict[str, Set[str]] = defaultdict(set)
     for k, v in (x.split('-') for x in network):
         graph[k].add(v)
+        graph[v].add(k)
 
     return graph
 
@@ -56,6 +57,8 @@ def create_forests(graph: Dict[str, Set[str]]) -> Set[str]:
         candidates = set([k])
         while candidates:
             node = candidates.pop()
+            if node in processed:
+                continue
             forest.add(node)
             processed.add(node)
             candidates.update(graph.get(node, {}))
@@ -65,13 +68,24 @@ def create_forests(graph: Dict[str, Set[str]]) -> Set[str]:
     return forests
 
 
+def check_for_friends(forests, friends):
+    '''Check if names belong to the same network'''
+
+    for forest in forests:
+        if friends < forest:
+            return True
+
+    return False
+
+
 def check_connection(network: Tuple[str, ...],
                      first: str, second: str) -> bool:
 
     graph = create_graph(network)
     forests = create_forests(graph)
+    result = check_for_friends(forests, {first, second})
 
-    return True
+    return result
 
 
 if __name__ == '__main__':
@@ -79,11 +93,11 @@ if __name__ == '__main__':
         ('dr101-mr99', 'mr99-out00', 'dr101-out00', 'scout1-scout2',
          'scout3-scout1', 'scout1-scout4', 'scout4-sscout', 'sscout-super'),
         'scout2', 'scout3'), 'Scout Brotherhood'
-    # assert check_connection(
-    #     ('dr101-mr99', 'mr99-out00', 'dr101-out00', 'scout1-scout2',
-    #      'scout3-scout1', 'scout1-scout4', 'scout4-sscout', 'sscout-super'),
-    #     'super', 'scout2'), 'Super Scout'
-    # assert not check_connection(
-    #     ('dr101-mr99', 'mr99-out00', 'dr101-out00', 'scout1-scout2',
-    #      'scout3-scout1', 'scout1-scout4', 'scout4-sscout', 'sscout-super'),
-    #     'dr101', 'sscout'), 'I do not know any scouts.'
+    assert check_connection(
+        ('dr101-mr99', 'mr99-out00', 'dr101-out00', 'scout1-scout2',
+         'scout3-scout1', 'scout1-scout4', 'scout4-sscout', 'sscout-super'),
+        'super', 'scout2'), 'Super Scout'
+    assert not check_connection(
+        ('dr101-mr99', 'mr99-out00', 'dr101-out00', 'scout1-scout2',
+         'scout3-scout1', 'scout1-scout4', 'scout4-sscout', 'sscout-super'),
+        'dr101', 'sscout'), 'I do not know any scouts.'
