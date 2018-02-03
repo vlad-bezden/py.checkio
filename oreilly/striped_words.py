@@ -25,16 +25,31 @@ Precondition:The text contains only ASCII symbols.
 0 < len(text) < 105
 '''
 
-VOWELS = 'AEIOUY'
-CONSONANTS = 'BCDFGHJKLMNPQRSTVWXZ'
+import re
+
+VOWELS = set('AEIOUY')
+CONSONANTS = set('BCDFGHJKLMNPQRSTVWXZ')
 
 
-def checkio(text):
+def is_striped(word: str) -> bool:
+    '''Checks if word is striped'''
 
-    return 0
+    odd = set(word[::2])
+    even = set(word[1::2])
+
+    return (odd <= VOWELS and even <= CONSONANTS) or \
+        (odd <= CONSONANTS and even <= VOWELS)
+
+
+def checkio(text: str) -> int:
+
+    return len([word for word in
+                re.findall(r'[\w]{2,}', text.upper())
+                if is_striped(word)])
 
 
 if __name__ == '__main__':
+
     assert checkio('My name is ...') == 3, 'All words are striped'
     assert checkio('Hello world') == 0, 'No one'
     assert checkio('A quantity of striped words.') == 1, 'Only of'
