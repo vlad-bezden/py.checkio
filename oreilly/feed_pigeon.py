@@ -15,12 +15,25 @@ Precondition: 0 < N < 105.
 '''
 
 
-def checkio(number):
-    return 1
+def checkio(number: int) -> int:
+
+    pigeons = 1
+    counter = 1
+
+    while number > pigeons:
+        number -= pigeons
+        counter += 1
+        if number < pigeons + counter:
+            break
+        pigeons += counter
+
+    return number if number > pigeons else pigeons
 
 
 if __name__ == '__main__':
     assert checkio(1) == 1, '1st example'
     assert checkio(2) == 1, '2nd example'
-    assert checkio(5) == 3, '3rd example'
-    assert checkio(10) == 6, '4th example'
+    assert checkio(3) == 2, '3rd example'
+    assert checkio(5) == 3, '4th example'
+    assert checkio(10) == 6, '5th example'
+    assert checkio(40) == 15, '6th example'
