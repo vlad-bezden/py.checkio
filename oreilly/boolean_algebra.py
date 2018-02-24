@@ -44,12 +44,29 @@ operation in ('conjunction', 'disjunction', 'implication', 'exclusive',
 'equivalence')
 '''
 
-OPERATION_NAMES = ('conjunction', 'disjunction',
-                   'implication', 'exclusive', 'equivalence')
+
+def conjunction(x, y):
+    return x and y
+
+
+def disjunction(x, y):
+    return x or y
+
+
+def implication(x, y):
+    return not x or y
+
+
+def exclusive(x, y):
+    return x != y
+
+
+def equivalence(x, y):
+    return x == y
 
 
 def boolean(x, y, operation):
-    return 1 or 0
+    return globals()[operation](x, y)
 
 
 if __name__ == '__main__':
