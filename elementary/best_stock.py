@@ -10,6 +10,11 @@ Preconditions: All the prices are unique.
 
 
 def best_stock(data: dict) -> str:
+    """
+    another posible solution is:
+    return max(data, key=lambda x: data[x])
+    return max(data, key=data.get)
+    """
 
     return max((v, k) for k, v in data.items())[1]
 
