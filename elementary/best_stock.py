@@ -11,7 +11,7 @@ Preconditions: All the prices are unique.
 
 def best_stock(data: dict) -> str:
 
-    return max([(v, k) for k, v in data.items()])[1]
+    return max((v, k) for k, v in data.items())[1]
 
 
 if __name__ == "__main__":
