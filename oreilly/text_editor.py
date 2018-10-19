@@ -70,26 +70,23 @@ class Text:
 
     def set_font(self, font_name: str) -> None:
         """Sets the chosen font"""
-        self.data.font = f"[{font_name}]"
+        self.data.font = font_name
 
     def show(self) -> str:
         """Returns the current text and font (if it was set)"""
         data = self.data
-        return f"{data.font}{data.text}{data.font}"
+        return "[{0}]{1}[{0}]".format(data.font, data.text) if data.font else data.text
 
     def restore(self, text: TextData) -> None:
         self.data = text
 
 
-class SavedText:
-    def __init__(self) -> None:
-        self.texts: list = []
-
+class SavedText(list):
     def save_text(self, text: Text) -> None:
-        self.texts.append(copy(text.data))
+        self.append(copy(text.data))
 
     def get_version(self, number: int) -> Text:
-        return self.texts[number]
+        return self[number]
 
 
 if __name__ == "__main__":
