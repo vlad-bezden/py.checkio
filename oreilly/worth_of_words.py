@@ -58,7 +58,8 @@ VALUES = {
 
 
 def worth_of_words(words: List[str]) -> str:
-    return max(words, key=lambda word: sum(VALUES[l] for l in word))
+    # return max(words, key=lambda word: sum(VALUES[l] for l in word))
+    return max(words, key=lambda word: sum(map(VALUES.get, word)))
 
 
 if __name__ == "__main__":
