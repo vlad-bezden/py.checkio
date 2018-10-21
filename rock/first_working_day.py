@@ -17,9 +17,18 @@ Precondition:
 1900 <= year <= 2100
 """
 
+from datetime import timedelta, datetime
+
 
 def vacation(date: str, days: int) -> int:
-    return 0
+    end = datetime.strptime(date, "%Y-%m-%d") + timedelta(days=days)
+    # one way of doing it. More consice, but less readable
+    working_day = end + timedelta(days=((end.weekday() > 4) + (end.weekday() == 5)))
+    # second way of doing it. More readable but longer lines
+    # working_day = (
+    #     end if end.weekday() <= 4 else end + timedelta(days=(7 - end.weekday()))
+    # )
+    return working_day.strftime("%Y-%m-%d")
 
 
 if __name__ == "__main__":
