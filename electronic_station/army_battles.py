@@ -26,9 +26,9 @@ from collections import deque
 
 
 class Warrior:
-    def __init__(self):
-        self.health: int = 50
-        self.attack: int = 5
+    def __init__(self, health: int=50, attack: int=5):
+        self.health = health
+        self.attack = attack
 
     @property
     def is_alive(self):
@@ -37,8 +37,7 @@ class Warrior:
 
 class Knight(Warrior):
     def __init__(self):
-        super().__init__()
-        self.attack = 7
+        super().__init__(attack=7)
 
 
 class Army(deque):
