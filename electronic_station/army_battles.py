@@ -22,7 +22,7 @@ Precondition: 2 types of units
 
 from itertools import cycle, permutations
 from typing import Union
-from queue import SimpleQueue, Empty
+from collections import deque
 
 
 class Warrior:
@@ -41,24 +41,24 @@ class Knight(Warrior):
         self.attack = 7
 
 
-class Army(SimpleQueue):
+class Army(deque):
     def add_units(self, type: Union[Warrior, Knight], amount: int) -> None:
         for _ in range(amount):
-            self.put(type())
+            self.append(type())
 
 
 class Battle:
     def fight(self, army_1: Army, army_2: Army) -> bool:
         try:
-            soldier_1 = army_1.get_nowait()
-            soldier_2 = army_2.get_nowait()
+            soldier_1 = army_1.popleft()
+            soldier_2 = army_2.popleft()
             while True:
                 soldier_1_alive = fight(soldier_1, soldier_2)
                 if soldier_1_alive:
-                    soldier_2 = army_2.get_nowait()
+                    soldier_2 = army_2.popleft()
                 else:
-                    soldier_1 = army_1.get_nowait()
-        except Empty as ex:
+                    soldier_1 = army_1.popleft()
+        except IndexError as ex:
             pass
 
         return soldier_1_alive
