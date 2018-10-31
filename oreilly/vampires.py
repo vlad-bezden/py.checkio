@@ -28,20 +28,16 @@ class Warrior:
         self.attack = attack
 
     @property
-    def is_alive(self):
+    def is_alive(self) -> bool:
         return self.health > 0
 
     def hit(self, enemy: Soldier) -> None:
         """Hit to the enemy by this object"""
-        enemy.loss(self.demage)
+        enemy.loss(self.attack)
 
-    def loss(self, attack: int) -> None:
+    def loss(self, attack: int) -> int:
         self.health -= attack
-
-    @property
-    def demage(self) -> int:
-        """Demage made by this object"""
-        return self.attack
+        return attack
 
 
 class Vampire(Warrior):
@@ -50,8 +46,8 @@ class Vampire(Warrior):
         self.vampirism: float = 0.5
 
     def hit(self, enemy: Soldier):
-        enemy.loss(self.attack)
-        self.health += (self.attack - enemy.demage) * self.vampirism
+        loss = enemy.loss(self.attack)
+        self.health += loss * self.vampirism
 
 
 class Defender(Warrior):
@@ -59,8 +55,10 @@ class Defender(Warrior):
         super().__init__(health=60, attack=3)
         self.defence: int = 2
 
-    def loss(self, attack: int) -> None:
-        self.health -= max(attack - self.defence, 0)
+    def loss(self, attack: int) -> int:
+        loss = max(attack - self.defence, 0)
+        self.health -= loss
+        return loss
 
 
 class Knight(Warrior):
@@ -131,6 +129,20 @@ if __name__ == "__main__":
     assert fight(eric, richard) is False
     assert fight(ogre, adam) is True
 
+    army_1 = Army()
+    army_2 = Army()
+
+    army_1.add_units(Defender, 5)
+    army_1.add_units(Vampire, 6)
+    army_1.add_units(Warrior, 7)
+    army_2.add_units(Warrior, 6)
+    army_2.add_units(Defender, 6)
+    army_2.add_units(Vampire, 6)
+
+    battle = Battle()
+
+    assert battle.fight(army_1, army_2) is False
+
     # battle tests
     my_army = Army()
     my_army.add_units(Defender, 2)
@@ -154,4 +166,5 @@ if __name__ == "__main__":
 
     assert battle.fight(my_army, enemy_army) is False
     assert battle.fight(army_3, army_4) is True
+
     print("Coding complete? Let's try tests!")
