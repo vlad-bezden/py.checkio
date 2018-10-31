@@ -22,9 +22,9 @@ from collections import deque
 
 
 class Warrior:
-    def __init__(self):
-        self.health: int = 50
-        self.attack: int = 5
+    def __init__(self, health: int = 50, attack: int = 5):
+        self.health = health
+        self.attack = attack
 
     @property
     def is_alive(self):
@@ -36,21 +36,16 @@ class Warrior:
 
 class Defender(Warrior):
     def __init__(self):
-        super().__init__()
-        self.health: int = 60
-        self.attack: int = 3
+        super().__init__(health=60, attack=3)
         self.defence: int = 2
 
     def fight(self, enemy: Warrior) -> None:
-        self.health -= (
-            (enemy.attack - self.defence) if enemy.attack > self.defence else 0
-        )
+        self.health -= max(enemy.attack - self.defence, 0)
 
 
 class Knight(Warrior):
     def __init__(self):
-        super().__init__()
-        self.attack = 7
+        super().__init__(attack=7)
 
 
 class Army(deque):
@@ -161,3 +156,4 @@ if __name__ == "__main__":
 
     assert battle.fight(my_army, enemy_army) is False
     assert battle.fight(army_3, army_4) is True
+    print("Completed!!!")
