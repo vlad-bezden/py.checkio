@@ -12,32 +12,35 @@ Precondition:
 all(all(0 < x < 10 for x in row) for row in matrix)
 """
 
+from itertools import groupby, chain
+import numpy as np
+
+MIN_N = 4
+
+
+def check(arr):
+    return bool([1 for _, g in groupby(arr) if len(list(g)) >= MIN_N])
+
+
+def diagonals(matrix):
+    d = matrix.shape[0] - MIN_N
+    diags = [matrix.diagonal(i) for i in range(-d, d + 1)]
+    return diags
+
 
 def checkio(matrix):
-    # replace this for solution
-    return True or False
+    np_d = np.array(matrix)
+    return any(
+        map(check, chain(np_d, np_d.T, diagonals(np_d), diagonals(np.rot90(np_d))))
+    )
 
 
 if __name__ == "__main__":
     assert (
-        checkio(
-            [
-                [1, 2, 1, 1],
-                [1, 1, 4, 1],
-                [1, 3, 1, 6],
-                [1, 7, 2, 5]
-            ]
-        ) is True
+        checkio([[1, 2, 1, 1], [1, 1, 4, 1], [1, 3, 1, 6], [1, 7, 2, 5]]) is True
     ), "Vertical"
     assert (
-        checkio(
-            [
-                [7, 1, 4, 1],
-                [1, 2, 5, 2],
-                [3, 4, 1, 3],
-                [1, 1, 8, 1]
-            ]
-        ) is False
+        checkio([[7, 1, 4, 1], [1, 2, 5, 2], [3, 4, 1, 3], [1, 1, 8, 1]]) is False
     ), "Nothing here"
     assert (
         checkio(
