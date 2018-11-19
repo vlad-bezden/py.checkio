@@ -19,7 +19,7 @@ MIN_N = 4
 
 
 def check(arr):
-    return bool([1 for _, g in groupby(arr) if len(list(g)) >= MIN_N])
+    return any([1 for _, g in groupby(arr) if len(list(g)) >= MIN_N])
 
 
 def diagonals(matrix):
