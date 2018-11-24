@@ -17,9 +17,19 @@ There are only brackets ("{}" "()" or "[]"), digits or operators ("+" "-" "*" "/
 0 < len(expression) < 103
 """
 
+BRACES = "{}()[]"
+ibraces = iter(BRACES)
+pairs = dict(zip(ibraces, ibraces))
 
-def checkio(expression):
-    return True or False
+
+def checkio(expression: str) -> bool:
+    stack = []
+    for b in (c for c in expression if c in BRACES):
+        if b in pairs.keys():
+            stack.append(b)
+        elif not stack or b != pairs[stack.pop()]:
+            return False
+    return not any(stack)
 
 
 # These "asserts" using only for self-checking and not necessary for auto-testing
