@@ -11,11 +11,17 @@ Precondition: 1 < |text| ≤ 20
 The text contains only ASCII characters.
 """
 
+from difflib import SequenceMatcher
+
 
 def longest_palindromic(text: str) -> str:
-    return text
+    text_size = len(text)
+    sm = SequenceMatcher(None, text, text[::-1])
+    match = sm.find_longest_match(0, text_size, 0, text_size)
+    return text[match.a : match.a + match.size]
 
 
 if __name__ == "__main__":
     assert longest_palindromic("artrartrt") == "rtrartr", "The Longest"
     assert longest_palindromic("abacada") == "aba", "The First"
+    assert longest_palindromic("aaaa") == "aaaa", "The A"
