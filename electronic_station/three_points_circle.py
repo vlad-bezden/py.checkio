@@ -30,19 +30,16 @@ Precondition: All three given points do not lie on one line.
 """
 
 from collections import namedtuple
+from typing import Union
+import re
 
 Points = namedtuple("Points", ["x1", "y1", "x2", "y2", "x3", "y3"])
 Coefficients = namedtuple("Coefficients", ["A", "B", "C", "D"])
 
-# def str_to_tuples(data: Text) -> List[Tuple[int, int]]:
-#     """Converts string of pair tuples to list of pair tuples"""
-#     it = iter("".join(c for c in data if c not in "() ").split(","))
-#     return [(int(x), int(y)) for x, y in zip(it, it)]
-
 
 def str_to_points(data: str) -> Points:
     """Converts string of pair tuples namedtuple"""
-    it = "".join(c for c in data if c not in "() ").split(",")
+    it = re.sub("[() ]", "", data).split(",")
     return Points(*(int(i) for i in it))
 
 
@@ -93,16 +90,24 @@ def r(c: Coefficients) -> float:
     return ((c.B ** 2 + c.C ** 2 - 4 * c.A * c.D) / (4 * c.A ** 2)) ** 0.5
 
 
-data = "(2,2),(6,2),(2,6)"
-points = str_to_points(data)
-coeff = Coefficients(A(points), B(points), C(points), D(points))
-_x = x(coeff)
-_y = y(coeff)
-_r = r(coeff)
+def format_value(val: float) -> Union[int, float]:
+    """Remove extraneous zeros and all decimal points, they are not necessary"""
+    value = round(val, 2)
+    return int(value) if value.is_integer() else round(value, 2)
 
-print(_x, _y, _r)
 
-# These "asserts" using only for self-checking and not necessary for auto-testing
-# if __name__ == "__main__":
-#     assert checkio("(2,2),(6,2),(2,6)") == "(x-4)^2+(y-4)^2=2.83^2"
-#     assert checkio("(3,7),(6,9),(9,7)") == "(x-6)^2+(y-5.75)^2=3.25^2"
+def checkio(data):
+    points = str_to_points(data)
+    coeff = Coefficients(A(points), B(points), C(points), D(points))
+    return (
+        f"(x-{format_value(x(coeff))})^2"
+        f"+(y-{format_value(y(coeff))})^2"
+        f"={format_value(r(coeff))}^2"
+    )
+
+
+if __name__ == "__main__":
+    assert checkio("(2,2),(6,2),(2,6)") == "(x-4)^2+(y-4)^2=2.83^2"
+    assert checkio("(3,7),(6,9),(9,7)") == "(x-6)^2+(y-5.75)^2=3.25^2"
+    assert checkio("(3,1),(6,6),(8,3)") == "(x-5.03)^2+(y-3.18)^2=2.98^2"
+    assert checkio("(7,3),(9,6),(3,6)") == "(x-6)^2+(y-5.83)^2=3^2"
