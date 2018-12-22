@@ -29,18 +29,78 @@ Precondition: All three given points do not lie on one line.
 0 < xi, yi, r < 10
 """
 
-from typing import List, Text, Tuple
+from collections import namedtuple
+
+Points = namedtuple("Points", ["x1", "y1", "x2", "y2", "x3", "y3"])
+Coefficients = namedtuple("Coefficients", ["A", "B", "C", "D"])
+
+# def str_to_tuples(data: Text) -> List[Tuple[int, int]]:
+#     """Converts string of pair tuples to list of pair tuples"""
+#     it = iter("".join(c for c in data if c not in "() ").split(","))
+#     return [(int(x), int(y)) for x, y in zip(it, it)]
 
 
-def str_to_tuples(data: Text) -> List[Tuple[int, int]]:
-    """Converts string of pair tuples to list of pair tuples"""
-    it = iter(data.replace("(", "").replace(")", "").split(","))
+def str_to_points(data: str) -> Points:
+    """Converts string of pair tuples namedtuple"""
+    it = "".join(c for c in data if c not in "() ").split(",")
+    return Points(*(int(i) for i in it))
 
-    return [(int(x), int(y)) for x, y in zip(it, it)]
+
+def A(p: Points) -> int:
+    """A = x1(y2 - y3) - y1(x2 - x3) + x2y3 - x3y2"""
+    return p.x1 * (p.y2 - p.y3) - p.y1 * (p.x2 - p.x3) + p.x2 * p.y3 - p.x3 * p.y2
+
+
+def B(p: Points) -> int:
+    """B = (x1^2 + y1^2)(y3 - y2) + (x2^2 + y2^2)(y1 - y3) + (x3^2 + y3^2)(y2 - y1)"""
+    return (
+        (p.x1 ** 2 + p.y1 ** 2) * (p.y3 - p.y2)
+        + (p.x2 ** 2 + p.y2 ** 2) * (p.y1 - p.y3)
+        + (p.x3 ** 2 + p.y3 ** 2) * (p.y2 - p.y1)
+    )
+
+
+def C(p: Points) -> int:
+    """C = (x1^2 + y1^2)(x2 - x3) + (x2^2 + y2^2)(x3 - x1) + (x3^2 + y3^2)(x1 - x2)"""
+    return (
+        (p.x1 ** 2 + p.y1 ** 2) * (p.x2 - p.x3)
+        + (p.x2 ** 2 + p.y2 ** 2) * (p.x3 - p.x1)
+        + (p.x3 ** 2 + p.y3 ** 2) * (p.x1 - p.x2)
+    )
+
+
+def D(p: Points) -> int:
+    """D = (x1^2 + y1^2)(x3y2 - x2y3) + (x2^2 + y2^2)(x1y3 - x3y1) + (x3^2 + y3^2)(x2y1 - x1y2)"""
+    return (
+        (p.x1 ** 2 + p.y1 ** 2) * (p.x3 * p.y2 - p.x2 * p.y3)
+        + (p.x2 ** 2 + p.y2 ** 2) * (p.x1 * p.y3 - p.x3 * p.y1)
+        + (p.x3 ** 2 + p.y3 ** 2) * (p.x2 * p.y1 - p.x1 * p.y2)
+    )
+
+
+def x(c: Coefficients) -> float:
+    """x = -B / (2*A)"""
+    return -c.B / (2 * c.A)
+
+
+def y(c: Coefficients) -> float:
+    """y = -C / (2*A)"""
+    return -c.C / (2 * c.A)
+
+
+def r(c: Coefficients) -> float:
+    """r = ((B^2 + C^2 - 4AD) / (4A^2))**0.5"""
+    return ((c.B ** 2 + c.C ** 2 - 4 * c.A * c.D) / (4 * c.A ** 2)) ** 0.5
 
 
 data = "(2,2),(6,2),(2,6)"
-print(str_to_tuples(data))
+points = str_to_points(data)
+coeff = Coefficients(A(points), B(points), C(points), D(points))
+_x = x(coeff)
+_y = y(coeff)
+_r = r(coeff)
+
+print(_x, _y, _r)
 
 # These "asserts" using only for self-checking and not necessary for auto-testing
 # if __name__ == "__main__":
