@@ -96,7 +96,7 @@ def format_value(val: float) -> Union[int, float]:
     return int(value) if value.is_integer() else round(value, 2)
 
 
-def checkio(data):
+def checkio(data: str) -> str:
     points = str_to_points(data)
     coeff = Coefficients(A(points), B(points), C(points), D(points))
     return (
