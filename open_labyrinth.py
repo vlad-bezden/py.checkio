@@ -30,7 +30,7 @@ from heapq import heappop, heappush
 
 Maze = List[List[int]]
 Point = Tuple[int, int]
-Graph = Dict[Point, Tuple[str, Point]]
+Graph = Dict[Point, List[Tuple[str, Point]]]
 
 START = (1, 1)
 
