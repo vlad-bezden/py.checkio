@@ -14,8 +14,8 @@ from typing import List
 
 
 def largest_histogram(histogram: List[int]) -> int:
-    max_value = len(histogram)
-    for i in range(max(histogram), 1, -1):
+    max_value = 0
+    for i in range(max(histogram), 0, -1):
         adjacent_coutner = 0
         counter = 0
         for v in [i <= x for x in histogram]:
