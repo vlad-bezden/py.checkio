@@ -44,14 +44,12 @@ def parse(number: int) -> List[int]:
 
 def checkio(number: int) -> int:
     divisors = parse(number)
-    if all(i < 10 for i in divisors):
-        return int("".join(map(str, sorted(divisors))))
-    else:
-        return 0
+    return (
+        int("".join(map(str, sorted(divisors)))) if all(i < 10 for i in divisors) else 0
+    )
 
 
 if __name__ == "__main__":
-    result = checkio(33)
     assert checkio(20) == 45, "1st example"
     assert checkio(21) == 37, "2nd example"
     assert checkio(17) == 0, "3rd example"
