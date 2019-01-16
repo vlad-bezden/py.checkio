@@ -39,14 +39,12 @@ def parse(number: int) -> List[int]:
             divisors.extend(parse(i))
             divisors.extend(parse(divisor))
             break
-    else:
-        divisors.append(number)
-    return divisors
+    return divisors if divisors else [number]
 
 
 def checkio(number: int) -> int:
     divisors = parse(number)
-    if divisors and all(i < 10 for i in divisors):
+    if all(i < 10 for i in divisors):
         return int("".join(map(str, sorted(parse(number)))))
     else:
         return 0
