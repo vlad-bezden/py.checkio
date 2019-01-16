@@ -16,15 +16,15 @@ from typing import List
 def largest_histogram(histogram: List[int]) -> int:
     max_value = len(histogram)
     for i in range(max(histogram), 1, -1):
-        adjacent = []
+        adjacent_coutner = 0
         counter = 0
         for v in [i <= x for x in histogram]:
             if v:
                 counter += 1
-                adjacent.append(counter)
+                adjacent_coutner = max(counter, adjacent_coutner)
             else:
                 counter = 0
-        max_value = max(max_value, max(adjacent) * i)
+        max_value = max(max_value, adjacent_coutner * i)
 
     return max_value
 
