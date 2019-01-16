@@ -26,8 +26,10 @@ Precondition:
 9 < N < 105.
 """
 
+from typing import List
 
-def parse(number: int):
+
+def parse(number: int) -> List[int]:
     if number < 10:
         return [number]
     divisors = []
