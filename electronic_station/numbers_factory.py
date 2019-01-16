@@ -27,11 +27,31 @@ Precondition:
 """
 
 
-def checkio(number):
-    return 0
+def parse(number: int):
+    if number < 10:
+        return [number]
+    divisors = []
+    for i in range(9, 1, -1):
+        divisor, reminder = divmod(number, i)
+        if reminder == 0:
+            divisors.append(i)
+            divisors.extend(parse(divisor))
+            break
+    else:
+        divisors.append(number)
+    return divisors
+
+
+def checkio(number: int) -> int:
+    divisors = parse(number)
+    if all(i < 10 for i in divisors):
+        return int("".join(map(str, sorted(parse(number)))))
+    else:
+        return 0
 
 
 if __name__ == "__main__":
+    result = checkio(20)
     assert checkio(20) == 45, "1st example"
     assert checkio(21) == 37, "2nd example"
     assert checkio(17) == 0, "3rd example"
