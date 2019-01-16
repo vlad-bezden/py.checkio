@@ -26,27 +26,14 @@ Precondition:
 9 < N < 105.
 """
 
-from typing import List
-
-
-def parse(number: int) -> List[int]:
-    if number < 10:
-        return [number]
-    divisors = []
-    for i in range(9, 1, -1):
-        divisor, reminder = divmod(number, i)
-        if reminder == 0:
-            divisors.extend(parse(i))
-            divisors.extend(parse(divisor))
-            break
-    return divisors if divisors else [number]
-
 
 def checkio(number: int) -> int:
-    divisors = parse(number)
-    return (
-        int("".join(map(str, sorted(divisors)))) if all(i < 10 for i in divisors) else 0
-    )
+    result = ""
+    for i in range(9, 1, -1):
+        while not number % i:
+            number //= i
+            result = f"{i}{result}"
+    return int(result) if number == 1 else 0
 
 
 if __name__ == "__main__":
