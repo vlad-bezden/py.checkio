@@ -31,22 +31,24 @@ def largest_histogram(histogram: List[int]) -> int:
     max_area = 0
     stack = []
     top = lambda: stack[-1]
+    area = lambda i, length: histogram[stack.pop()] * (
+        (i - top() - 1) if stack else length
+    )
 
     for i in range(len(histogram)):
         # we are saving indexes in stack that is why we comparing last element in stack
         # with current height to check if last element in stack not bigger then
         # current element
         while stack and histogram[i] <= histogram[top()]:
-            area = histogram[stack.pop()] * ((i - top() - 1) if stack else i)
-            max_area = max(max_area, area)
+            max_area = max(max_area, area(i, i))
         stack.append(i)
 
     # we went through all elements of histogram
     # check if we have something left in stack
     while stack:
-        area = histogram[stack.pop()] * ((i - top() - 1) if stack else len(histogram))
-        max_area = max(max_area, area)
+        max_area = max(max_area, area(i, len(histogram)))
     return max_area
+
 
 if __name__ == "__main__":
     assert largest_histogram([5]) == 5, "one is always the biggest"
