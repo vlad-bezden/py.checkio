@@ -8,42 +8,46 @@ Input: Iterable
 Output: Iterable
 
 Precondition: elements can be integers or strings
+
+Performance:
+frequency_sort_fast took: 0.182043
+frequency_sort_slow took: 2.800217
 """
 
 from typing import List, Any, Iterator, Union
 from collections import Counter
+from timeit import timeit
 
 InputData = List[Any]
 OutputData = Union[InputData, Iterator[Any]]
 
 
-def frequency_sort(items: InputData) -> OutputData:
+def frequency_sort_fast(items: InputData) -> OutputData:
     c = Counter(items)
-    result = sorted(c.elements(), key=lambda k: c[k], reverse=True)
-    return result
+    return sorted(c.elements(), key=lambda k: c[k], reverse=True)
+
+
+def frequency_sort_slow(items: InputData) -> OutputData:
+    return sorted(items, key=lambda k: (-items.count(k), items.index(k)))
 
 
 if __name__ == "__main__":
-    assert list(frequency_sort([4, 6, 2, 2, 6, 4, 4, 4])) == [4, 4, 4, 4, 6, 6, 2, 2]
-    assert list(frequency_sort([4, 6, 2, 2, 2, 6, 4, 4, 4])) == [
-        4,
-        4,
-        4,
-        4,
-        2,
-        2,
-        2,
-        6,
-        6,
-    ]
-    assert list(frequency_sort(["bob", "bob", "carl", "alex", "bob"])) == [
-        "bob",
-        "bob",
-        "bob",
-        "carl",
-        "alex",
-    ]
-    assert list(frequency_sort([17, 99, 42])) == [17, 99, 42]
-    assert list(frequency_sort([])) == []
-    assert list(frequency_sort([1])) == [1]
+    items = [*range(1000, 0, -1)]
+    for f in [frequency_sort_fast, frequency_sort_slow]:
+        assert list(f([4, 6, 2, 2, 6, 4, 4, 4])) == [4, 4, 4, 4, 6, 6, 2, 2]
+        assert list(f([4, 6, 2, 2, 2, 6, 4, 4, 4])) == [4, 4, 4, 4, 2, 2, 2, 6, 6]
+        assert list(f(["bob", "bob", "carl", "alex", "bob"])) == [
+            "bob",
+            "bob",
+            "bob",
+            "carl",
+            "alex",
+        ]
+        assert list(f([17, 99, 42])) == [17, 99, 42]
+        assert list(f([])) == []
+        assert list(f([1])) == [1]
+
+        t = timeit(stmt="f(items)", number=100, globals=globals())
+        print(f"{f.__name__} took: {t:.6f}")
+
     print("DONE!")
