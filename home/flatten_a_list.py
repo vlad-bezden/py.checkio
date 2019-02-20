@@ -27,28 +27,54 @@ flat_list([-1, [1, [-2], 1], -1]) == [-1, 1, -2, 1, -1]
 Precondition: 0 ≤ |array| ≤ 100
 ∀ x ∈ array : -232 < x < 232 or x is a list
 depth < 10
+
+Performance results:
+f_c took: 0.522254
+f_r took: 0.546113
+f_m took: 0.317996
 """
 
 import itertools as it
+import functools as ft
+from timeit import timeit
 
 
-def flat_list(d):
-    return [d] if type(d) == int else [*(it.chain(*[flat_list(l) for l in d]))]
+def f_c(d):
+    """using chain."""
+    return [d] if type(d) == int else [*(it.chain(*[f_c(l) for l in d]))]
+
+
+def f_r(d):
+    """using reduce."""
+    return [d] if type(d) == int else ft.reduce(lambda p, c: p + f_r(c), d, [])
+
+
+def f_m(d):
+    """using map."""
+    return [d] if type(d) == int else sum(map(f_m, d), [])
 
 
 if __name__ == "__main__":
-    assert flat_list([1, 2, 3]) == [1, 2, 3], "First"
-    assert flat_list([1, [2, 2, 2], 4]) == [1, 2, 2, 2, 4], "Second"
-    assert flat_list([[[2]], [4, [5, 6, [6], 6, 6, 6], 7]]) == [
-        2,
-        4,
-        5,
-        6,
-        6,
-        6,
-        6,
-        6,
-        7,
-    ], "Third"
-    assert flat_list([-1, [1, [-2], 1], -1]) == [-1, 1, -2, 1, -1], "Four"
-    print("Done! Check it")
+    for f in [f_c, f_r, f_m]:
+        assert f([1, 2, 3]) == [1, 2, 3], "First"
+        assert f([1, [2, 2, 2], 4]) == [1, 2, 2, 2, 4], "Second"
+        assert f([[[2]], [4, [5, 6, [6], 6, 6, 6], 7]]) == [
+            2,
+            4,
+            5,
+            6,
+            6,
+            6,
+            6,
+            6,
+            7,
+        ], "Third"
+        assert f([-1, [1, [-2], 1], -1]) == [-1, 1, -2, 1, -1], "Four"
+        t = timeit(
+            stmt="f([[[2]], [4, [5, 6, [6], 6, 6, 6], 7]])",
+            number=10000,
+            globals=globals(),
+        )
+
+        print(f"{f.__name__} took: {t:.6f}")
+    print("Done!")
