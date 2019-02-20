@@ -29,9 +29,10 @@ Precondition: 0 ≤ |array| ≤ 100
 depth < 10
 
 Performance results:
-f_c took: 0.522254
-f_r took: 0.546113
-f_m took: 0.317996
+f_c took: 0.578635
+f_r took: 0.886350
+f_m took: 0.392955
+f_cl took: 0.221162
 """
 
 import itertools as it
@@ -41,21 +42,33 @@ from timeit import timeit
 
 def f_c(d):
     """using chain."""
-    return [d] if type(d) == int else [*(it.chain(*[f_c(l) for l in d]))]
+    return [d] if type(d) is int else [*(it.chain(*[f_c(l) for l in d]))]
 
 
 def f_r(d):
     """using reduce."""
-    return [d] if type(d) == int else ft.reduce(lambda p, c: p + f_r(c), d, [])
+    return [d] if type(d) is int else ft.reduce(lambda p, c: p + f_r(c), d, [])
 
 
 def f_m(d):
     """using map."""
-    return [d] if type(d) == int else sum(map(f_m, d), [])
+    return [d] if type(d) is int else sum(map(f_m, d), [])
+
+
+def f_cl(d):
+    """using closure."""
+    r = []
+
+    def f(l):
+        for i in l:
+            r.append(i) if type(i) is int else f(i)
+
+    f(d)
+    return r
 
 
 if __name__ == "__main__":
-    for f in [f_c, f_r, f_m]:
+    for f in [f_c, f_r, f_m, f_cl]:
         assert f([1, 2, 3]) == [1, 2, 3], "First"
         assert f([1, [2, 2, 2], 4]) == [1, 2, 2, 2, 4], "Second"
         assert f([[[2]], [4, [5, 6, [6], 6, 6, 6], 7]]) == [
