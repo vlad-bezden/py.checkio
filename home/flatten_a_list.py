@@ -29,13 +29,11 @@ Precondition: 0 ≤ |array| ≤ 100
 depth < 10
 """
 
+import itertools as it
+
+
 def flat_list(d):
-    if not isinstance(d, list):
-        return [d]
-    r = []
-    for l in d:
-        r.extend(flat_list(l))
-    return r
+    return [d] if isinstance(d, int) else [*(it.chain(*[flat_list(l) for l in d]))]
 
 
 if __name__ == "__main__":
