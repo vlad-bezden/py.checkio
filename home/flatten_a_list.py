@@ -11,7 +11,7 @@ more lists and integers which then… you get the idea
 You should put all of the integer values into one flat list. The order should be as it
 was in the original list with string representation from left to right.
 
-We need to hide this program from Nikola by keeping it small and easy to hide.
+We need to hide this program from Nikolas by keeping it small and easy to hide.
 Because of this, your code should be shorter than 140 characters (with whitespaces).
 
 Input data: A nested list with integers.
@@ -33,12 +33,11 @@ import itertools as it
 
 
 def flat_list(d):
-    return [d] if isinstance(d, int) else [*(it.chain(*[flat_list(l) for l in d]))]
+    return [d] if type(d) == int else [*(it.chain(*[flat_list(l) for l in d]))]
 
 
 if __name__ == "__main__":
     assert flat_list([1, 2, 3]) == [1, 2, 3], "First"
-    result = flat_list([1, [2, 2, 2], 4])
     assert flat_list([1, [2, 2, 2], 4]) == [1, 2, 2, 2, 4], "Second"
     assert flat_list([[[2]], [4, [5, 6, [6], 6, 6, 6], 7]]) == [
         2,
