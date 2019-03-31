@@ -1,8 +1,8 @@
 """
-You have to return not a substring but a substring length. 
-You need to find a substring that repeats more than once in a given string. 
-This reiteration shouldn't have overlaps. 
-For example, in a string "abcab" the longest substring that repeats more than once is "ab", 
+You have to return not a substring but a substring length.
+You need to find a substring that repeats more than once in a given string.
+This reiteration shouldn't have overlaps.
+For example, in a string "abcab" the longest substring that repeats more than once is "ab",
 so the answer should be 2 (length of "ab")
 
 Input: String.
