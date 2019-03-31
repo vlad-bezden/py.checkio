@@ -1,5 +1,5 @@
 .mypy_cache
 __pycache__
-/venv
-/.vscode
+venv/
+.vscode/
 activate.bat
