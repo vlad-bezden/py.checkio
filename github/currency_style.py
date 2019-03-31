@@ -21,22 +21,37 @@ all(s[-1].isdigit() for s in currency_substrings);
 all(s[0] == '$' for s in currency_substrings)
 """
 
+import re
+
 
 def checkio(text: str) -> str:
-    return ""
+    """
+    # \$            letter '$'
+    # \d{1,3}       [0-9] of length {1, 3}
+    # (\.\d{3})*    repetition of \.[0-9]{3}, if exists
+    # (,\d{2}){,1}  ,[0-9]{2}, if exists
+    # (?!\d)        no [0-9] after pattern
+    """
+
+    return re.sub(
+        r"\$\d{1,3}(\.\d{3})*(,\d{2}){,1}(?!\d)",
+        lambda match: match.group().translate(str.maketrans(",.", ".,")),
+        text,
+    )
 
 
 if __name__ == "__main__":
     assert checkio("$1.234.567,89") == "$1,234,567.89", "1st Example"
     assert checkio("$0,89") == "$0.89", "2nd Example"
+    assert checkio("$5.34") == "$5.34", "3rd example"
+    assert checkio("$222,100,455") == "$222,100,455", "3rd example"
+    assert checkio("127.255.255.255") == "127.255.255.255", "4th example"
     assert (
         checkio("Euro Style = $12.345,67, US Style = $12,345.67")
         == "Euro Style = $12,345.67, US Style = $12,345.67"
     ), "European and US"
     assert (
-        checkio("Us Style = $12,345.67, Euro Style = $12.345,67")
-        == "Us Style = $12,345.67, Euro Style = $12,345.67"
-    ), "US and European"
-    assert (
         checkio("$1.234, $5.678 and $9") == "$1,234, $5,678 and $9"
     ), "Dollars without cents"
+
+    print("DONE!!!")
