@@ -10,9 +10,9 @@ Input: String.
 Output: Int.
 
 Performance:
-double_substring_sm       0.1197 secs
-double_substring_re       0.0221 secs
-double_substring_loop     0.0376 secs
+double_substring_re       0.0159 secs
+double_substring_loop     0.0347 secs
+double_substring_sm       0.1178 secs
 """
 
 import re
