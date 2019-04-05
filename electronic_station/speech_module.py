@@ -5,7 +5,8 @@ Stephen's speech module is broken.
 This module is responsible for his number pronunciation.
 He has to click to input all of the numerical digits in a figure,
 so when there are big numbers it can take him a long time.
-Help the robot to speak properly and increase his number processing speed by writing a new speech module for him.
+Help the robot to speak properly and increase his number processing speed by writing a
+new speech module for him.
 All the words in the string must be separated by exactly one space character.
 Be careful with spaces -- it's hard to see if you place two spaces instead one.
 
@@ -57,8 +58,19 @@ HUNDRED = "hundred"
 
 
 def checkio(number: int) -> str:
-    # TODO:
-    return "string representation of n"
+    result = ""
+    q, r = divmod(number, 100)
+    if q:
+        result = f"{FIRST_TEN[q - 1]} {HUNDRED}"
+    q, r = divmod(r, 10)
+    if q == 1:
+        result += f" {SECOND_TEN[r]}"
+        return result.strip()
+    if q:
+        result += f" {OTHER_TENS[q - 2]}"
+    if r:
+        result += f" {FIRST_TEN[r - 1]}"
+    return result.strip()
 
 
 if __name__ == "__main__":
@@ -71,3 +83,4 @@ if __name__ == "__main__":
     assert not checkio(212).endswith(
         " "
     ), "Don't forget strip whitespaces at the end of string"
+    print("DONE!")
