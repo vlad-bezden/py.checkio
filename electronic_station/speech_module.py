@@ -58,19 +58,21 @@ HUNDRED = "hundred"
 
 
 def checkio(number: int) -> str:
-    result = ""
+    result = []
     q, r = divmod(number, 100)
+    # check for hundreds
     if q:
-        result = f"{FIRST_TEN[q - 1]} {HUNDRED}"
+        result.append(f"{FIRST_TEN[q - 1]} {HUNDRED}")
     q, r = divmod(r, 10)
+    # check for values 10 < n < 20
     if q == 1:
-        result += f" {SECOND_TEN[r]}"
-        return result.strip()
+        result.append(f"{SECOND_TEN[r]}")
+        return " ".join(result)
     if q:
-        result += f" {OTHER_TENS[q - 2]}"
+        result.append(f"{OTHER_TENS[q - 2]}")
     if r:
-        result += f" {FIRST_TEN[r - 1]}"
-    return result.strip()
+        result.append(f"{FIRST_TEN[r - 1]}")
+    return " ".join(result)
 
 
 if __name__ == "__main__":
