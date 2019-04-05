@@ -63,15 +63,14 @@ def checkio(number: int) -> str:
     # check for hundreds
     if q:
         result.append(f"{FIRST_TEN[q - 1]} {HUNDRED}")
-    q, r = divmod(r, 10)
-    # check for values 10 < n < 20
-    if q == 1:
-        result.append(f"{SECOND_TEN[r]}")
-        return " ".join(result)
-    if q:
+    if 0 < r < 20:
+        result.append(f"{(FIRST_TEN + SECOND_TEN)[r - 1]}")
+    if r >= 20:
+        # 20 <= n < 100
+        q, r = divmod(r, 10)
         result.append(f"{OTHER_TENS[q - 2]}")
-    if r:
-        result.append(f"{FIRST_TEN[r - 1]}")
+        if r:
+            result.append(f"{FIRST_TEN[r - 1]}")
     return " ".join(result)
 
 
@@ -82,6 +81,7 @@ if __name__ == "__main__":
     assert checkio(101) == "one hundred one", "4th example"
     assert checkio(212) == "two hundred twelve", "5th example"
     assert checkio(40) == "forty", "6th example"
+    assert checkio(100) == "one hundred", "7th example"
     assert not checkio(212).endswith(
         " "
     ), "Don't forget strip whitespaces at the end of string"
