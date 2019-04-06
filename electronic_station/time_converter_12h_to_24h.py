@@ -20,7 +20,7 @@ time_converter('11:15 p.m.') == '23:15'
 Precondition:
 '00:00' <= time <= '23:59'
 
-Performance: using pure mornatting is > 10 times faster
+Performance: using pure formatting is > 10 times faster
     time_converter_1    0.0748
     time_converter_2    0.0067
 
