@@ -19,18 +19,34 @@ time_converter('11:15 p.m.') == '23:15'
 
 Precondition:
 '00:00' <= time <= '23:59'
+
+Performance: using pure mornatting is > 10 times faster
+    time_converter_1    0.0748
+    time_converter_2    0.0067
+
 """
 
+from timeit import timeit
+from time import strftime as to, strptime as from_
 
-def time_converter(time: str) -> str:
+
+def time_converter_1(time: str) -> str:
+    ampm = time.replace(".", "")
+    return to("%H:%M", from_(ampm, "%I:%M %p"))
+
+
+def time_converter_2(time: str) -> str:
     hours, minutes = map(int, time[:-5].split(":"))
     hours = hours % 12 + 12 * ("p" in time)
     return f"{hours:02}:{minutes:02}"
 
 
 if __name__ == "__main__":
-    assert time_converter("12:30 p.m.") == "12:30"
-    assert time_converter("9:00 a.m.") == "09:00"
-    assert time_converter("11:15 p.m.") == "23:15"
-    assert time_converter("12:00 a.m.") == "00:00"
+    for f in [time_converter_1, time_converter_2]:
+        assert f("12:30 p.m.") == "12:30"
+        assert f("9:00 a.m.") == "09:00"
+        assert f("11:15 p.m.") == "23:15"
+        assert f("12:00 a.m.") == "00:00"
+        t = timeit(stmt="f('12:30 p.m.')", number=1000, globals=globals())
+        print(f"{f.__name__:<20}{t:.4f}")
     print("DONE!")
