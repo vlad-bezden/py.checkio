@@ -6,11 +6,14 @@ You have to find a substring enclosed between these two markers.
 But there are a few important conditions:
 
 The initial and final markers are always different.
-If there is no initial marker then the beginning should be considered as the beginning of a string.
-If there is no final marker then the ending should be considered as the ending of a string.
+If there is no initial marker then the beginning should be considered as the
+beginning of a string.
+If there is no final marker then the ending should be considered as the
+ending of a string.
 If the initial and final markers are missing then simply return the whole string.
 If the final marker is standing in front of the initial one then return an empty string.
-Input: Three arguments. All of them are strings. The second and third arguments are the initial and final markers.
+Input: Three arguments. All of them are strings.
+The second and third arguments are the initial and final markers.
 
 Output: A string.
 
@@ -19,13 +22,20 @@ Precondition: can't be more than one final marker and can't be more than one ini
 
 
 def between_markers(text: str, begin: str, end: str) -> str:
-    """
-    Returns substring between two given markers
+    """    Returns substring between two given markers.
+
+    It uses text[start:end] structure.
+    [0, text.find(begin) + len(begin)][begin in text] - returns 'start' and
+    it returns 0 if [begin in text] is equal to False (0)
+    and it will return text.find(begin) + len(begin) if [begin in text] is equal to
+    True (1). The same logic is for:
+    [None, text.find(end)][end in text]
     """
 
     return text[
-        [0, text.find(begin) + len(begin)][begin in text]:
-        [None, text.find(end)][end in text]
+        [0, text.find(begin) + len(begin)][begin in text] : [None, text.find(end)][
+            end in text
+        ]
     ]
 
 
