@@ -22,7 +22,7 @@ Precondition: can't be more than one final marker and can't be more than one ini
 
 
 def between_markers(text: str, begin: str, end: str) -> str:
-    """    Returns substring between two given markers.
+    """Returns substring between two given markers.
 
     It uses text[start:end] structure.
     [0, text.find(begin) + len(begin)][begin in text] - returns 'start' and
