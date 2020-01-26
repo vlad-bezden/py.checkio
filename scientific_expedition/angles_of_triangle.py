@@ -31,11 +31,11 @@ calc = lambda a, b, c: round(degrees(acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * 
 rotate = lambda l, n: l[n:] + l[:n]
 
 
-def checkio(a: int, b: int, c: int) -> List[int]:
-    if a + b <= c:
+def checkio(*args: int) -> List[int]:
+    if sum(args[:2]) <= args[-1]:
         return [0, 0, 0]
 
-    return sorted(calc(*rotate([a, b, c], i)) for i in range(3))
+    return sorted(calc(*rotate(args, i)) for i, _ in enumerate(args))
 
 
 if __name__ == "__main__":
