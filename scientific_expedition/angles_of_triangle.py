@@ -28,15 +28,14 @@ from math import acos, degrees
 from typing import List
 
 calc = lambda a, b, c: round(degrees(acos((b ** 2 + c ** 2 - a ** 2) / (2 * b * c))))
+rotate = lambda l, n: l[n:] + l[:n]
 
 
 def checkio(a: int, b: int, c: int) -> List[int]:
     if a + b <= c:
         return [0, 0, 0]
 
-    angles = [calc(a, b, c), calc(b, a, c), calc(c, a, b)]
-
-    return sorted(a for a in angles)
+    return sorted(calc(*rotate([a, b, c], i)) for i in range(3))
 
 
 if __name__ == "__main__":
