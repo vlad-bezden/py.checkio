@@ -39,8 +39,7 @@ fmt = lambda n, s=3: f"{int(n[0]):0{s}b} {int(n[1]):04b}"
 
 def checkio(time: str) -> str:
     h, m, s = [f"0{i}"[-2:] for i in time.split(":")]
-    result = f"{fmt(h, 2)} : {fmt(m)} : {fmt(s)}".translate(TO_MORSE)
-    return result
+    return f"{fmt(h, 2)} : {fmt(m)} : {fmt(s)}".translate(TO_MORSE)
 
 
 if __name__ == "__main__":
