@@ -32,14 +32,12 @@ Precondition:
 time_string contains correct time.
 """
 
-fmt = lambda n, s=3: f"{int(n[0]):0{s}b} {int(n[1]):04b}".replace("0", ".").replace(
-    "1", "-"
-)
+fmt = lambda n, s=3: f"{int(n[0]):0{s}b} {int(n[1]):04b}"
 
 
 def checkio(time: str) -> str:
     h, m, s = [f"0{i}"[-2:] for i in time.split(":")]
-    result = f"{fmt(h, 2)} : {fmt(m)} : {fmt(s)}"
+    result = f"{fmt(h, 2)} : {fmt(m)} : {fmt(s)}".replace("0", ".").replace("1", "-")
     return result
 
 
