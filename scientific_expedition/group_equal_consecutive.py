@@ -21,12 +21,35 @@ group_equal([]) == []
 
 from itertools import groupby
 from typing import List, Union
+from random import randint
 
 DataType = List[Union[str, int]]
 
 
 def group_equal(items: DataType) -> List[DataType]:
+    return [group_equal_groupby, group_equal_stack][randint(0, 1)](items)
+
+
+def group_equal_groupby(items: DataType) -> List[DataType]:
+    """Using itertools.groupby standard Python library."""
+    print(f"Using groupby standard function")
     return [[*g] for _, g in groupby(items)]
+
+
+def group_equal_stack(items: DataType) -> List[DataType]:
+    """Custom implementation."""
+    print(f"Using custom code")
+    stack = []
+    prev = None
+
+    for i in items:
+        if prev == i:
+            stack[-1].append(i)
+        else:
+            stack.append([i])
+            prev = i
+
+    return stack
 
 
 if __name__ == "__main__":
