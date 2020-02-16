@@ -1,5 +1,5 @@
 """Four to the Floor.
-https://py.checkio.org/mission/four-to-the-floor/solve/
+https://py.checkio.org/en/mission/four-to-the-floor/
 
 Given a room's size and a list of PIR sensors mounted on the
 room's ceiling and looking down on the floor, your task is to
