@@ -46,9 +46,7 @@
 """
 
 checkio = lambda message: "".join(
-    chr(int(i[:-1], 2))
-    for i in (bin(i) for i in message)
-    if i[:-1].count("1") % 2 == int(i[-1])
+    chr(i >> 1) for i in message if bin(i).count("1") & 1 == 0
 )
 
 
