@@ -104,12 +104,13 @@ class Node:
         return f"Node({self.state}, {self.path}, {self.cost})"
 
     def __str__(self):
-        state = self.state
         path = self.path
         cost = self.cost
         heuristic = self.heuristic
         total_cost = self._total_cost
-        return f"{state=}, {path=}, {cost=}, {heuristic=}, {total_cost=}"
+        return f"{path=}, \n{cost=}, \n{heuristic=}, \n{total_cost=}, \n" + "\n".join(
+            map(str, self.state)
+        )
 
 
 class PriorityQueue:
@@ -140,6 +141,7 @@ def a_star(initial: Puzzle) -> str:
         visited.append(current.state)
         # check if goal is met.
         if current.state == GOAL:
+            print(f"Number of tries: {len(visited)}.")
             return current
 
         # check for all moves that are not visited yet and add them
@@ -157,23 +159,14 @@ def print_states(node):
         node = node.parent
 
     while stack and (node := stack.pop()):
-        print(f"Move: {node.path[-1] if node.path else 'START'}")
-        print(f"Heuristic cost: {node.heuristic}")
-        print(*node.state, sep="\n")
-        print()
+        print(node, "\n")
 
 
 def checkio(puzzle: Puzzle) -> str:
-    """
-        Solve the puzzle
-        U - up
-        D - down
-        L - left
-        R - right
-    """
+    """Entry function for solving a puzzle"""
+    # find solution based on A* algorithm
     result = a_star(puzzle)
-    print(*result.state, sep="\n")
-    print(f"Solution: {result.path}")
+    print(f"Final solution: {result.path} \nNumber of moves {len(result.path)}")
     print_states(result)
     return result.path
 
@@ -201,7 +194,5 @@ if __name__ == "__main__":
             return False
 
     assert check_solution(checkio, [[1, 2, 3], [4, 6, 8], [7, 5, 0]]), "1st example"
-    print("Passed first!", "\n")
     assert check_solution(checkio, [[7, 3, 5], [4, 8, 6], [1, 2, 0]]), "2nd example"
-    print("Passed second")
     print("PASSED!!!")
