@@ -22,24 +22,26 @@
     all(len(row) == 3 for row in puzzle)
 """
 
+from __future__ import annotations
 from heapq import heappush, heappop
 from copy import deepcopy
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 Puzzle = List[List[int]]
+Coordinate = Tuple[int, int]
 
 GOAL = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
 SIZE = len(GOAL)
-MOVES = {"U": (-1, 0), "D": (1, 0), "L": (0, -1), "R": (0, 1)}
+MOVES: Dict[str, Coordinate] = {"U": (-1, 0), "D": (1, 0), "L": (0, -1), "R": (0, 1)}
 
 
-def get_moves(node: "Node") -> List["Node"]:
+def get_moves(node: Node) -> List[Node]:
     """Gets all legal moves.
         Legal move is the one that doesn't cross boundary: 0 <= i < SIZE
     """
     neighbors = []
     for direction, value in MOVES.items():
-        neighbor = tuple(map(sum, zip(node.zero, value)))
+        neighbor: Coordinate = tuple(map(sum, zip(node.zero, value)))
         if all(0 <= i < SIZE for i in neighbor):
             new_state = deepcopy(node)
             new_state.move(neighbor, direction)
@@ -59,7 +61,7 @@ class Node:
         self.path = path
         self.zero = self._find_zero()
 
-    def _calc_heuristic_cost(self):
+    def _calc_heuristic_cost(self) -> int:
         """Current puzzle heuristic cost using Manhatten distance."""
         h_val = 0
         for i, row in enumerate(self.state):
@@ -69,18 +71,19 @@ class Node:
                     h_val += abs(x - i) + abs(y - j)
         return h_val
 
-    def _find_zero(self):
+    def _find_zero(self) -> Coordinate:
         """Finds coordinates of the empty cell (0)"""
         for x, row in enumerate(self.state):
             for y, v in enumerate(row):
                 if v == 0:
                     return x, y
+        raise ValueError("There is no 0 found in the Puzzle")
 
-    def value(self, coordinate: Tuple[int, int]) -> int:
+    def value(self, coordinate: Coordinate) -> int:
         """Returns value of the coordinate (x, y)."""
         return self.state[coordinate[0]][coordinate[1]]
 
-    def move(self, coordinate: Tuple[int, int], path: str):
+    def move(self, coordinate: Coordinate, path: str):
         """Moves 0 to the new coordinate"""
         self.state[self.zero[0]][self.zero[1]] = self.value(coordinate)
         self.state[coordinate[0]][coordinate[1]] = 0
@@ -90,14 +93,14 @@ class Node:
         self.heuristic = self._calc_heuristic_cost()
 
     @property
-    def _total_cost(self):
+    def _total_cost(self) -> int:
         """Returns cost + heuristic cost"""
         return self.cost + self.heuristic
 
     def __lt__(self, other: "Node") -> bool:
         return self._total_cost < other._total_cost
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Node({self.state}, {self.path}, {self.cost})"
 
     def __str__(self):
@@ -110,14 +113,14 @@ class Node:
 
 
 class PriorityQueue:
-    def __init__(self):
-        self._container = []
+    def __init__(self) -> None:
+        self._container: List[Node] = []
 
     @property
     def empty(self) -> bool:
         return not self._container
 
-    def push(self, item: Node):
+    def push(self, item: Node) -> None:
         heappush(self._container, item)
 
     def pop(self) -> Node:
@@ -143,6 +146,7 @@ def a_star(initial: Puzzle) -> str:
         # to the queue
         for c in (c for c in get_moves(current) if c.state not in visited):
             to_visit.push(c)
+    raise Exception("Could not find solution")
 
 
 def checkio(puzzle: Puzzle) -> str:
