@@ -40,7 +40,7 @@ def create_node(node: Node, coordinate: Coordinate, direction) -> Node:
     new_state = deepcopy(node.state)
     new_state[node.zero[0]][node.zero[1]] = node.value(coordinate)
     new_state[coordinate[0]][coordinate[1]] = 0
-    new_node = Node(new_state, node.path + direction, node.cost + 1)
+    new_node = Node(node, new_state, node.path + direction, node.cost + 1)
     return new_node
 
 
@@ -60,7 +60,8 @@ def get_moves(node: Node) -> List[Node]:
 class Node:
     """Current state representation of the board and it's value"""
 
-    def __init__(self, state: Puzzle, path: str, cost: int) -> None:
+    def __init__(self, parent: Node, state: Puzzle, path: str, cost: int) -> None:
+        self.parent = parent
         self.state = state
         # g(n) - number of steps taken to the current state
         self.cost = cost
@@ -131,7 +132,7 @@ class PriorityQueue:
 
 def a_star(initial: Puzzle) -> str:
     to_visit = PriorityQueue()
-    to_visit.push(Node(initial, "", 0))
+    to_visit.push(Node(None, initial, "", 0))
     visited = []
 
     while to_visit:
@@ -139,13 +140,27 @@ def a_star(initial: Puzzle) -> str:
         visited.append(current.state)
         # check if goal is met.
         if current.state == GOAL:
-            return current.path
+            return current
 
         # check for all moves that are not visited yet and add them
         # to the queue
         for c in (c for c in get_moves(current) if c.state not in visited):
             to_visit.push(c)
     raise Exception("Could not find solution")
+
+
+def print_states(node):
+    stack = []
+    print("\nSolutions:")
+    while node:
+        stack.append(node)
+        node = node.parent
+
+    while stack and (node := stack.pop()):
+        print(f"Move: {node.path[-1] if node.path else 'START'}")
+        print(f"Heuristic cost: {node.heuristic}")
+        print(*node.state, sep="\n")
+        print()
 
 
 def checkio(puzzle: Puzzle) -> str:
@@ -157,8 +172,10 @@ def checkio(puzzle: Puzzle) -> str:
         R - right
     """
     result = a_star(puzzle)
-    print(f"{puzzle} -> {result}")
-    return result
+    print(*result.state, sep="\n")
+    print(f"Solution: {result.path}")
+    print_states(result)
+    return result.path
 
 
 if __name__ == "__main__":
@@ -184,7 +201,7 @@ if __name__ == "__main__":
             return False
 
     assert check_solution(checkio, [[1, 2, 3], [4, 6, 8], [7, 5, 0]]), "1st example"
-    print("Passed first")
+    print("Passed first!", "\n")
     assert check_solution(checkio, [[7, 3, 5], [4, 8, 6], [1, 2, 0]]), "2nd example"
     print("Passed second")
     print("PASSED!!!")
