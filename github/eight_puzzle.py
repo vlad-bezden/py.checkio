@@ -22,20 +22,15 @@
     all(len(row) == 3 for row in puzzle)
 """
 
-from __future__ import annotations
 from heapq import heappush, heappop
 from copy import deepcopy
-from typing import List, Tuple, Dict
-
-Puzzle = List[List[int]]
-Coordinate = Tuple[int, int]
 
 GOAL = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
 SIZE = len(GOAL)
-MOVES: Dict[str, Coordinate] = {"U": (-1, 0), "D": (1, 0), "L": (0, -1), "R": (0, 1)}
+MOVES = {"U": (-1, 0), "D": (1, 0), "L": (0, -1), "R": (0, 1)}
 
 
-def create_node(node: Node, coordinate: Coordinate, direction) -> Node:
+def create_node(node, coordinate, direction):
     """Creates node based on move existing node to new coordinate"""
     new_state = deepcopy(node.state)
     new_state[node.zero[0]][node.zero[1]] = node.value(coordinate)
@@ -44,7 +39,7 @@ def create_node(node: Node, coordinate: Coordinate, direction) -> Node:
     return new_node
 
 
-def get_moves(node: Node) -> List[Node]:
+def get_moves(node):
     """Gets all legal moves.
         Legal move is the one that doesn't cross boundary: 0 <= i < SIZE
     """
@@ -60,7 +55,7 @@ def get_moves(node: Node) -> List[Node]:
 class Node:
     """Current state representation of the board and it's value"""
 
-    def __init__(self, parent: Node, state: Puzzle, path: str, cost: int) -> None:
+    def __init__(self, parent, state, path, cost):
         self.parent = parent
         self.state = state
         # g(n) - number of steps taken to the current state
@@ -70,7 +65,7 @@ class Node:
         self.path = path
         self.zero = self._find_zero()
 
-    def _calc_heuristic_cost(self) -> int:
+    def _calc_heuristic_cost(self):
         """Current puzzle heuristic cost using Manhatten distance."""
         h_val = 0
         for i, row in enumerate(self.state):
@@ -80,7 +75,7 @@ class Node:
                     h_val += abs(x - i) + abs(y - j)
         return h_val
 
-    def _find_zero(self) -> Coordinate:
+    def _find_zero(self):
         """Finds coordinates of the empty cell (0)"""
         for x, row in enumerate(self.state):
             for y, v in enumerate(row):
@@ -88,19 +83,19 @@ class Node:
                     return x, y
         raise ValueError("There is no 0 found in the Puzzle")
 
-    def value(self, coordinate: Coordinate) -> int:
+    def value(self, coordinate):
         """Returns value of the coordinate (x, y)."""
         return self.state[coordinate[0]][coordinate[1]]
 
     @property
-    def _total_cost(self) -> int:
+    def _total_cost(self):
         """Returns cost + heuristic cost"""
         return self.cost + self.heuristic
 
-    def __lt__(self, other: "Node") -> bool:
+    def __lt__(self, other):
         return self._total_cost < other._total_cost
 
-    def __repr__(self) -> str:
+    def __repr__(self):
         return f"Node({self.state}, {self.path}, {self.cost})"
 
     def __str__(self):
@@ -114,24 +109,24 @@ class Node:
 
 
 class PriorityQueue:
-    def __init__(self) -> None:
+    def __init__(self):
         self._container: List[Node] = []
 
     @property
-    def empty(self) -> bool:
+    def empty(self):
         return not self._container
 
-    def push(self, item: Node) -> None:
+    def push(self, item):
         heappush(self._container, item)
 
-    def pop(self) -> Node:
+    def pop(self):
         return heappop(self._container)
 
-    def __repr__(self) -> str:
+    def __repr__(self):
         return repr(self._container)
 
 
-def a_star(initial: Puzzle) -> str:
+def a_star(initial):
     to_visit = PriorityQueue()
     to_visit.push(Node(None, initial, "", 0))
     visited = []
@@ -162,7 +157,7 @@ def print_states(node):
         print(node, "\n")
 
 
-def checkio(puzzle: Puzzle) -> str:
+def checkio(puzzle):
     """Entry function for solving a puzzle"""
     # find solution based on A* algorithm
     result = a_star(puzzle)
