@@ -35,6 +35,15 @@ SIZE = len(GOAL)
 MOVES: Dict[str, Coordinate] = {"U": (-1, 0), "D": (1, 0), "L": (0, -1), "R": (0, 1)}
 
 
+def create_node(node: Node, coordinate: Coordinate, direction) -> Node:
+    """Creates node based on move existing node to new coordinate"""
+    new_state = deepcopy(node.state)
+    new_state[node.zero[0]][node.zero[1]] = node.value(coordinate)
+    new_state[coordinate[0]][coordinate[1]] = 0
+    new_node = Node(new_state, node.path + direction, node.cost + 1)
+    return new_node
+
+
 def get_moves(node: Node) -> List[Node]:
     """Gets all legal moves.
         Legal move is the one that doesn't cross boundary: 0 <= i < SIZE
@@ -43,9 +52,8 @@ def get_moves(node: Node) -> List[Node]:
     for direction, value in MOVES.items():
         neighbor: Coordinate = tuple(map(sum, zip(node.zero, value)))
         if all(0 <= i < SIZE for i in neighbor):
-            new_state = deepcopy(node)
-            new_state.move(neighbor, direction)
-            neighbors.append(new_state)
+            new_node = create_node(node, neighbor, direction)
+            neighbors.append(new_node)
     return neighbors
 
 
@@ -82,15 +90,6 @@ class Node:
     def value(self, coordinate: Coordinate) -> int:
         """Returns value of the coordinate (x, y)."""
         return self.state[coordinate[0]][coordinate[1]]
-
-    def move(self, coordinate: Coordinate, path: str):
-        """Moves 0 to the new coordinate"""
-        self.state[self.zero[0]][self.zero[1]] = self.value(coordinate)
-        self.state[coordinate[0]][coordinate[1]] = 0
-        self.zero = coordinate
-        self.cost += 1
-        self.path += path
-        self.heuristic = self._calc_heuristic_cost()
 
     @property
     def _total_cost(self) -> int:
