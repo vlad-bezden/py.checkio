@@ -29,11 +29,18 @@
         clear_solution 0.0056
 """
 
-from itertools import combinations
+from itertools import combinations, compress, product
 from timeit import timeit
 from collections import namedtuple
 
 Test = namedtuple("Test", ["data", "expected"])
+
+
+def using_product(data):
+    ans = mass = sum(data)
+    for comb in product((0, 1), repeat=len(data)):
+        ans = min(ans, abs(mass - 2 * sum(compress(data, comb))))
+    return ans
 
 
 def using_combinations(data):
@@ -58,6 +65,7 @@ def using_combinations(data):
 
 def clear_solution(data):
     diffs = {0}
+    total = sum(data)
     for i in data:
         temp = set()
         for diff in diffs:
@@ -78,9 +86,10 @@ if __name__ == "__main__":
     ]
 
     for test in tests:
-        for func in [using_combinations, clear_solution]:
+        for func in [using_product, using_combinations, clear_solution]:
             result = func(test.data)
             assert result == test.expected, f"{test.data=}, {test.expected=}, {result=}"
             t = timeit(stmt=f"func({test.data})", number=1_000, globals=globals())
             print(f"{func.__name__} {t:.4f}")
+        print("\n")
     print("PASSED!")
