@@ -13,12 +13,30 @@
     Precondition:
     0 < len(weights) ≤ 10
     all(0 < x < 100 for x in weights)
+
+    Output:
+        using_combinations 0.0041
+        clear_solution 0.0023
+        using_combinations 0.0025
+        clear_solution 0.0015
+        using_combinations 0.0167
+        clear_solution 0.0107
+        using_combinations 0.0091
+        clear_solution 0.0050
+        using_combinations 0.0283
+        clear_solution 0.0151
+        using_combinations 0.0090
+        clear_solution 0.0056
 """
 
 from itertools import combinations
+from timeit import timeit
+from collections import namedtuple
+
+Test = namedtuple("Test", ["data", "expected"])
 
 
-def checkio(data):
+def using_combinations(data):
     """ Finds difference between the total weight of each set
 
         Create all permutations and filter out the ones
@@ -38,11 +56,31 @@ def checkio(data):
     return total - max_combs * 2
 
 
+def clear_solution(data):
+    diffs = {0}
+    for i in data:
+        temp = set()
+        for diff in diffs:
+            temp.add(abs(i - diff))
+            temp.add(abs(i + diff))
+        diffs = temp
+    return min(diffs)
+
+
 if __name__ == "__main__":
-    assert checkio([10, 10]) == 0, "1st example"
-    assert checkio([10]) == 10, "2nd example"
-    assert checkio([5, 8, 13, 14, 27]) == 3, "3rd example"
-    assert checkio([5, 5, 5, 6]) == 1, "4th example"
-    assert checkio([12, 30, 30, 32, 42, 49]) == 9, "5th example"
-    assert checkio([1, 1, 1, 3]) == 0, "6th example"
+    tests = [
+        Test([10, 10], 0),
+        Test([10], 10),
+        Test([5, 8, 13, 14, 27], 3),
+        Test([5, 5, 5, 6], 1),
+        Test([12, 30, 30, 32, 42, 49], 9),
+        Test([1, 1, 1, 3], 0),
+    ]
+
+    for test in tests:
+        for func in [using_combinations, clear_solution]:
+            result = func(test.data)
+            assert result == test.expected, f"{test.data=}, {test.expected=}, {result=}"
+            t = timeit(stmt=f"func({test.data})", number=1_000, globals=globals())
+            print(f"{func.__name__} {t:.4f}")
     print("PASSED!")
