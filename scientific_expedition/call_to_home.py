@@ -46,7 +46,7 @@ from math import ceil
 from typing import Tuple
 
 
-def total_cost(calls: Tuple[str]) -> int:
+def total_cost(calls: Tuple[str, ...]) -> int:
     """Calculate total cost.
 
     ceil(int(m[20:]) / 60) - rounds to the nearest minute
