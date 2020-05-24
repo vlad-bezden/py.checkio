@@ -42,19 +42,20 @@
 """
 
 from itertools import groupby
+from math import ceil
 from typing import Tuple
 
 
 def total_cost(calls: Tuple[str]) -> int:
     """Calculate total cost.
 
-    int(m[20:]) + 59) // 60 - rounds to the nearest minute
+    ceil(int(m[20:]) / 60) - rounds to the nearest minute
     max(mins, mins * 2 - 100) - calculates cost
     """
     return sum(
         max(mins, mins * 2 - 100)
         for mins in (
-            sum((int(m[20:]) + 59) // 60 for m in t)
+            sum(ceil(int(m[20:]) / 60) for m in t)
             for _, t in groupby(calls, lambda i: i[:10])
         )
     )
